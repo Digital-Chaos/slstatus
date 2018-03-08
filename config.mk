@@ -3,6 +3,28 @@ VERSION = 0
 
 # customize below to fit your system
 
+# components
+COM =\
+	components/battery\
+	components/cpu\
+	components/datetime\
+	components/disk\
+	components/entropy\
+	components/hostname\
+	components/ip\
+	components/kernel_release\
+	components/keyboard_indicators\
+	components/load_avg\
+	components/num_files\
+	components/ram\
+	components/run_command\
+	components/swap\
+	components/temperature\
+	components/uptime\
+	components/user\
+	components/volume\
+	components/wifi
+
 # paths
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/man
