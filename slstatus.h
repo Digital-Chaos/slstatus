@@ -1,9 +1,10 @@
 /* See LICENSE file for copyright and license details. */
 
 /* battery */
-const char *battery_perc(const char *);
-const char *battery_power(const char *);
-const char *battery_state(const char *);
+const char *battery_perc(void);
+const char *battery_power(void);
+const char *battery_state(void);
+const char *battery_time(void);
 
 /* cpu */
 const char *cpu_freq(void);
