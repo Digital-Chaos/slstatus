@@ -12,9 +12,10 @@ static const char unknown_str[] = "n/a";
 /*
  * function             description                     argument
  *
- * battery_perc         battery percentage              battery name
- * battery_power        battery power usage             battery name
- * battery_state        battery charging state          battery name
+ * battery_perc         battery percentage              NULL
+ * battery_power        battery power usage             NULL
+ * battery_state        battery charging state          NULL
+ * battery_time         battery remaining time          NULL
  * cpu_perc             cpu usage in percent            NULL
  * cpu_iowait           cpu iowait in percent           NULL
  * cpu_freq             cpu frequency in MHz            NULL
@@ -50,8 +51,9 @@ static const char unknown_str[] = "n/a";
  * wifi_essid           WiFi ESSID                      interface name
  */
 static const struct arg args[] = {
-	/* function format          argument */
-	// { cpu_perc, "[CPU %3s%%] ", NULL    },
-	// { ram_perc, "[RAM %2s%%] ", NULL    },
-	{ datetime, "%s",       "%a %d %b %H:%M" },
+	/* function 		format          	argument */
+	// { cpu_perc, 		"[CPU %3s%%] ", 	NULL },
+	{ ram_perc, 		" RAM: %s%% ", 		NULL },
+	{ battery_perc,		" BAT: %s%% ", 		NULL },
+	{ datetime, 		" %s ",       		"%a %d %b %H:%M" },
 };
