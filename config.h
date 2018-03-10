@@ -16,9 +16,9 @@ static const char unknown_str[] = "n/a";
  * battery_power        battery power usage             NULL
  * battery_state        battery charging state          NULL
  * battery_time         battery remaining time          NULL
+ * cpu_freq             cpu frequency in GHz            NULL
  * cpu_perc             cpu usage in percent            NULL
- * cpu_iowait           cpu iowait in percent           NULL
- * cpu_freq             cpu frequency in MHz            NULL
+ * cpu_temp             cpu temperature in Celsius      NULL
  * datetime             date and time                   format string
  * disk_free            free disk space in GB           mountpoint path
  * disk_perc            disk usage in percent           mountpoint path
@@ -51,9 +51,11 @@ static const char unknown_str[] = "n/a";
  * wifi_essid           WiFi ESSID                      interface name
  */
 static const struct arg args[] = {
-	/* function 		format          	argument */
-	// { cpu_perc, 		"[CPU %3s%%] ", 	NULL },
-	{ ram_perc, 		" RAM: %s%% ", 		NULL },
-	{ battery_perc,		" BAT: %s%% ", 		NULL },
-	{ datetime, 		" %s ",       		"%a %d %b %H:%M" },
+	/* function         format              argument */
+	{ cpu_perc,         "| CPU: %s%% ",     NULL },
+	{ cpu_freq,         " %s ",             NULL },
+	{ cpu_temp,         " %s ",             NULL },
+	{ ram_perc,         "| RAM: %s%% ",     NULL },
+	{ battery_perc,     "| BAT: %s%% ",     NULL },
+	{ datetime,         "| %s ",             "%a %d %b %H:%M" },
 };
