@@ -1,63 +1,66 @@
 /* See LICENSE file for copyright and license details. */
 #include <stdio.h>
-#include <string.h>
-
+#include <sys/sysctl.h>
+#include <sys/dkstat.h>
 #include "../util.h"
+
+
+#define ZERO_CELSIUS         273.15
+#define SYSCTL_CPU_FREQ     "dev.cpu.0.freq"
+#define SYSCTL_CPU_TEMP     "dev.cpu.0.temperature"
+#define SYSCTL_CPU_TIMES    "kern.cp_time"
 
 const char *
 cpu_freq(void)
 {
-	int freq;
-
-	return (pscanf("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq",
-	               "%i", &freq) == 1) ?
-	       bprintf("%d", (freq + 500) / 1000) : NULL;
+    int freq;
+    size_t freq_size = sizeof(freq);
+    if (sysctlbyname(SYSCTL_CPU_FREQ, &freq, &freq_size, NULL, 0) == -1) {
+        freq = -1;
+    }
+    return (freq > -1) ? (bprintf("%1.1fGHz", (float) freq / 1000)) : (NULL);
 }
 
 const char *
 cpu_perc(void)
 {
-	int perc;
-	static long double a[7];
-	static int valid;
-	long double b[7];
+    int percent = -1;
+    static long previous_total_time;
+    static long previous_idle_time;
 
-	memcpy(b, a, sizeof(b));
-	if (pscanf("/proc/stat", "%*s %Lf %Lf %Lf %Lf %Lf %Lf %Lf", &a[0], &a[1], &a[2],
-	           &a[3], &a[4], &a[5], &a[6]) != 7) {
-		return NULL;
-	}
-	if (!valid) {
-		valid = 1;
-		return NULL;
-	}
+    long cpu_time[CPUSTATES];
+    size_t cpu_time_size = sizeof(cpu_time);
+    if (sysctlbyname(SYSCTL_CPU_TIMES, &cpu_time, &cpu_time_size, NULL, 0) == 0) {
 
-	perc = 100 * ((b[0]+b[1]+b[2]+b[5]+b[6]) - (a[0]+a[1]+a[2]+a[5]+a[6])) /
-	       ((b[0]+b[1]+b[2]+b[3]+b[4]+b[5]+b[6]) - (a[0]+a[1]+a[2]+a[3]+a[4]+a[5]+a[6]));
+        // current idle time
+        long idle_time = cpu_time[CP_IDLE];
 
-	return bprintf("%d", perc);
+        // current total accumulated time for all cpu states
+        long total_time = 0;
+        for (int i = 0; i < CPUSTATES; i++) {
+            total_time += cpu_time[i];
+        }
+
+        // calc cpu usage as total time minus idle time
+        long delta_idle_time  = idle_time  - previous_idle_time;
+        long delta_total_time = total_time - previous_total_time;
+        percent = (100 * (delta_total_time - delta_idle_time)) / delta_total_time;
+
+        // store current times as previous times for next call
+        previous_total_time = total_time;
+        previous_idle_time = idle_time;
+    }
+
+    return (percent > -1) ? (bprintf("%d", percent)) : (NULL);
 }
 
 const char *
-cpu_iowait(void)
+cpu_temp(void)
 {
-	int perc;
-	static int valid;
-	static long double a[7];
-	long double b[7];
-
-	memcpy(b, a, sizeof(b));
-	if (pscanf("/proc/stat", "%*s %Lf %Lf %Lf %Lf %Lf %Lf %Lf", &a[0], &a[1], &a[2],
-	           &a[3], &a[4], &a[5], &a[6]) != 7) {
-		return NULL;
-	}
-	if (!valid) {
-		valid = 1;
-		return NULL;
-	}
-
-	perc = 100 * ((b[4]) - (a[4])) /
-	       ((b[0]+b[1]+b[2]+b[3]+b[4]+b[5]+b[6]) - (a[0]+a[1]+a[2]+a[3]+a[4]+a[5]+a[6]));
-
-	return bprintf("%d", perc);
+    int temp;
+    size_t temp_size = sizeof(temp);
+    if (sysctlbyname(SYSCTL_CPU_TEMP, &temp, &temp_size, NULL, 0) == -1) {
+        temp = -1;
+    }
+    return (temp > -1) ? (bprintf("%1.1fC", ((float) temp / 10) - ZERO_CELSIUS)) : (NULL);
 }
