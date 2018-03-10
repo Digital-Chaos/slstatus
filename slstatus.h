@@ -9,7 +9,7 @@ const char *battery_time(void);
 /* cpu */
 const char *cpu_freq(void);
 const char *cpu_perc(void);
-const char *cpu_iowait(void);
+const char *cpu_temp(void);
 
 /* datetime */
 const char *datetime(const char *);
