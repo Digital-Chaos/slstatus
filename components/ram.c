@@ -1,52 +1,90 @@
 /* See LICENSE file for copyright and license details. */
 #include <stdio.h>
-
+#include <sys/sysctl.h>
+#include <unistd.h>
 #include "../util.h"
+
+#define DISPLAY_FORMAT              "%2.1fGB"
+#define GIGABYTE                    (1024 * 1024 * 1024)
+
+#define SYSCTL_VM_PAGE_COUNT        "vm.stats.vm.v_page_count"
+#define SYSCTL_VM_FREE_COUNT        "vm.stats.vm.v_free_count"
+#define SYSCTL_VM_INACTIVE_COUNT    "vm.stats.vm.v_inactive_count"
+
+
+static const char *bytes_to_string(long bytes);
+static long vm_stats(const char *name);
+static long vm_available_bytes();
+static long vm_total_bytes();
+static long vm_used_bytes();
+
 
 const char *
 ram_free(void)
 {
-	long free;
-
-	return (pscanf("/proc/meminfo", "MemFree: %ld kB\n", &free) == 1) ?
-	       bprintf("%f", (float)free / 1024 / 1024) : NULL;
+	return bytes_to_string(vm_available_bytes());
 }
 
 const char *
 ram_perc(void)
 {
-	long total, free, buffers, cached;
-
-	return (pscanf("/proc/meminfo",
-	               "MemTotal: %ld kB\n"
-	               "MemFree: %ld kB\n"
-	               "MemAvailable: %ld kB\nBuffers: %ld kB\n"
-	               "Cached: %ld kB\n",
-	               &total, &free, &buffers, &buffers, &cached) == 5) ?
-	       bprintf("%d", 100 * ((total - free) - (buffers + cached)) / total) :
-	       NULL;
+	int percent_used = ((100 * vm_used_bytes()) / vm_total_bytes());
+	return bprintf("%d",  percent_used);
 }
 
 const char *
 ram_total(void)
 {
-	long total;
-
-	return (pscanf("/proc/meminfo", "MemTotal: %ld kB\n", &total) == 1) ?
-	       bprintf("%f", (float)total / 1024 / 1024) : NULL;
+	return bytes_to_string(vm_total_bytes());
 }
 
 const char *
 ram_used(void)
 {
-	long total, free, buffers, cached;
+	return bytes_to_string(vm_used_bytes());
+}
 
-	return (pscanf("/proc/meminfo",
-	               "MemTotal: %ld kB\n"
-	               "MemFree: %ld kB\n"
-	               "MemAvailable: %ld kB\nBuffers: %ld kB\n"
-	               "Cached: %ld kB\n",
-	               &total, &free, &buffers, &buffers, &cached) == 5) ?
-	       bprintf("%f", (float)(total - free - buffers - cached) / 1024 / 1024) :
-	       NULL;
+
+static const char *
+bytes_to_string(long bytes)
+{
+	return (bytes > -1) ? (bprintf(DISPLAY_FORMAT, (float) bytes / GIGABYTE)) : (NULL);
+}
+
+static long
+vm_available_bytes()
+{
+	long available_bytes = -1;
+	long free_bytes = vm_stats(SYSCTL_VM_FREE_COUNT);
+	if (free_bytes > -1) {
+		long inactive_bytes = vm_stats(SYSCTL_VM_INACTIVE_COUNT);
+		if (inactive_bytes > -1) {
+			available_bytes = free_bytes + inactive_bytes;
+		}
+	}
+	return available_bytes;
+}
+
+static long
+vm_total_bytes()
+{
+	return vm_stats(SYSCTL_VM_PAGE_COUNT);
+}
+
+static long
+vm_used_bytes()
+{
+	return (vm_total_bytes() - vm_available_bytes());
+}
+
+static long
+vm_stats(const char *name)
+{
+	long bytes = -1;
+	int page_count;
+	size_t page_count_size = sizeof(page_count);
+	if (sysctlbyname(name, &page_count, &page_count_size, NULL, 0) == 0) {
+		bytes = (long) page_count * getpagesize();
+	}
+	return bytes;
 }
