@@ -8,7 +8,7 @@ COM =\
 	components/datetime\
 	components/battery\
 	components/ram\
-#	components/cpu\
+	components/cpu\
 #	components/disk\
 #	components/entropy\
 #	components/hostname\
