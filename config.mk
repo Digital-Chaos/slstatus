@@ -6,7 +6,8 @@ VERSION = 0
 # components
 COM =\
 	components/datetime\
-#	components/battery\
+	components/battery\
+	components/ram\
 #	components/cpu\
 #	components/disk\
 #	components/entropy\
@@ -16,7 +17,6 @@ COM =\
 #	components/keyboard_indicators\
 #	components/load_avg\
 #	components/num_files\
-#	components/ram\
 #	components/run_command\
 #	components/swap\
 #	components/temperature\
