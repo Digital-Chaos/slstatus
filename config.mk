@@ -9,7 +9,7 @@ COM =\
 	components/battery\
 	components/ram\
 	components/cpu\
-#	components/disk\
+	components/disk\
 #	components/entropy\
 #	components/hostname\
 #	components/ip\
