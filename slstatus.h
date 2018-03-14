@@ -15,6 +15,7 @@ const char *cpu_temp(void);
 const char *datetime(const char *);
 
 /* disk */
+const char *disk_avail(const char *);
 const char *disk_free(const char *);
 const char *disk_perc(const char *);
 const char *disk_total(const char *);
