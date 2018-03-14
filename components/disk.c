@@ -5,7 +5,8 @@
 
 #include "../util.h"
 
-#define GIGABYTE    (1024 * 1024 * 1024)
+#define DISPLAY_FORMAT              "%ldG"
+#define GIGABYTE                    (1024 * 1024 * 1024)
 
 /* Disk space currently available for non-superuser */
 const char *
@@ -16,7 +17,7 @@ disk_avail(const char *path)
     if (statfs(path, &stats) == 0) {
         avail_bytes = stats.f_bavail * stats.f_bsize;
     }
-    return (avail_bytes > -1) ? (bprintf("%ldG", avail_bytes / GIGABYTE)) : (NULL);
+    return (avail_bytes > -1) ? (bprintf(DISPLAY_FORMAT, avail_bytes / GIGABYTE)) : (NULL);
 }
 
 /* Disk space currently free (includes space reserved for superuser) */
@@ -28,7 +29,7 @@ disk_free(const char *path)
     if (statfs(path, &stats) == 0) {
         free_bytes = stats.f_bfree * stats.f_bsize;
     }
-    return (free_bytes > -1) ? (bprintf("%ldG", free_bytes / GIGABYTE)) : (NULL);
+    return (free_bytes > -1) ? (bprintf(DISPLAY_FORMAT, free_bytes / GIGABYTE)) : (NULL);
 }
 
 /* Percentage of available (non reserved) disk space currently used */
@@ -57,7 +58,7 @@ disk_total(const char *path)
     if (statfs(path, &stats) == 0) {
         total_bytes = stats.f_blocks * stats.f_bsize;
     }
-    return (total_bytes > -1) ? (bprintf("%ldG", total_bytes / GIGABYTE)) : (NULL);
+    return (total_bytes > -1) ? (bprintf(DISPLAY_FORMAT, total_bytes / GIGABYTE)) : (NULL);
 }
 
 /* Amount of space on disk currently used */
@@ -70,5 +71,5 @@ disk_used(const char *path)
 
         used_bytes = (stats.f_blocks - stats.f_bfree) * stats.f_bsize;
     }
-    return (used_bytes > -1) ? (bprintf("%ldG", used_bytes / GIGABYTE)) : (NULL);
+    return (used_bytes > -1) ? (bprintf(DISPLAY_FORMAT, used_bytes / GIGABYTE)) : (NULL);
 }
