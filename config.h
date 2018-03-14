@@ -20,6 +20,7 @@ static const char unknown_str[] = "n/a";
  * cpu_perc             cpu usage in percent            NULL
  * cpu_temp             cpu temperature in Celsius      NULL
  * datetime             date and time                   format string
+ * disk_avail           available disk space in GB      mountpoint path
  * disk_free            free disk space in GB           mountpoint path
  * disk_perc            disk usage in percent           mountpoint path
  * disk_total           total disk space in GB          mountpoint path
