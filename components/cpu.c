@@ -18,7 +18,7 @@ cpu_freq(void)
     if (sysctlbyname(SYSCTL_CPU_FREQ, &freq, &freq_size, NULL, 0) == -1) {
         freq = -1;
     }
-    return (freq > -1) ? (bprintf("%1.1fGHz", (float) freq / 1000)) : (NULL);
+    return (freq > -1) ? (bprintf("%1.1f", (float) freq / 1000)) : (NULL);
 }
 
 const char *
@@ -62,5 +62,5 @@ cpu_temp(void)
     if (sysctlbyname(SYSCTL_CPU_TEMP, &temp, &temp_size, NULL, 0) == -1) {
         temp = -1;
     }
-    return (temp > -1) ? (bprintf("%1.1fC", ((float) temp / 10) - ZERO_CELSIUS)) : (NULL);
+    return (temp > -1) ? (bprintf("%1.0f", ((float) temp / 10) - ZERO_CELSIUS)) : (NULL);
 }
