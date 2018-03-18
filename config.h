@@ -52,12 +52,12 @@ static const char unknown_str[] = "n/a";
  * wifi_essid           WiFi ESSID                      interface name
  */
 static const struct arg args[] = {
-    /* function         format              argument */
-    { cpu_perc,         "| CPU: %s%% ",     NULL },
-    { cpu_freq,         " %sGHz ",          NULL },
-    { cpu_temp,         " %s\u00b0C ",      NULL },
-    { ram_perc,         "| RAM: %s%% ",     NULL },
-    { disk_perc,        "| HDD: %s%% ",     "/" },
-    { battery_perc,     "| BAT: %s%% ",     NULL },
-    { datetime,         "| %s ",            "%a %d %b %H:%M" },
+    /* function         format               argument */
+    { cpu_perc,         " \uf3fd %s%%" ,     NULL },
+    { cpu_freq,         " %sGHz" ,           NULL },
+    { cpu_temp,         " %s\u00b0C ",       NULL },
+    { ram_perc,         " \uf2db %s%% ",     NULL },
+    { disk_perc,        " \uf1c0 %s%% ",     "/" },
+    { battery_perc,     " \uf0e7 %s%% ",     NULL },
+    { datetime,         " \uf017 %s",        "%a %d %b %H:%M" },
 };
