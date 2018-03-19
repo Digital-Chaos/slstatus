@@ -10,6 +10,7 @@ COM =\
 	components/ram\
 	components/cpu\
 	components/disk\
+	components/volume\
 #	components/entropy\
 #	components/hostname\
 #	components/ip\
@@ -22,7 +23,6 @@ COM =\
 #	components/temperature\
 #	components/uptime\
 #	components/user\
-#	components/volume\
 #	components/wifi
 
 # paths

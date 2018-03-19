@@ -59,5 +59,6 @@ static const struct arg args[] = {
     { ram_perc,         " \uf2db %s%% ",     NULL },
     { disk_perc,        " \uf1c0 %s%% ",     "/" },
     { battery_perc,     " \uf0e7 %s%% ",     NULL },
+    { vol_perc,         " \uf028 %s%% ",     "/dev/mixer" },
     { datetime,         " \uf017 %s",        "%a %d %b %H:%M" },
 };
