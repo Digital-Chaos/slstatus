@@ -53,10 +53,10 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
     /* function         format               argument */
-    { cpu_perc,         " \uf3fd %s%%" ,     NULL },
+    { cpu_perc,         " \uf2db %s%%" ,     NULL },
     { cpu_freq,         " %sGHz" ,           NULL },
     { cpu_temp,         " %s\u00b0C ",       NULL },
-    { ram_perc,         " \uf2db %s%% ",     NULL },
+    { ram_perc,         " \uf538 %s%% ",     NULL },
     { disk_perc,        " \uf1c0 %s%% ",     "/" },
     { battery_perc,     " \uf0e7 %s%% ",     NULL },
     { vol_perc,         " \uf028 %s%% ",     "/dev/mixer" },
